@@ -60,6 +60,8 @@ $ctx = stream_context_create(['http' => ['timeout' => 25, 'ignore_errors' => tru
 foreach ($peta as $asli => $hasil) {
     $isi = @file_get_contents($base . '/' . $asli, false, $ctx);
     if ($isi === false || $isi === '') { $log[] = "GAGAL  $asli"; continue; }
+    // buang alamat localhost supaya CSS, gambar, dan link tidak menunjuk ke laptop
+    $isi = preg_replace('#https?://(?:localhost|127\.0\.0\.1)(?::\d+)?/#i', '/', $isi);
     $isi = ubah_link($isi, $peta, $path);
     file_put_contents($out . '/' . $hasil, $isi);
     $log[] = "OK     $asli  ->  docs/$hasil";
